@@ -35,7 +35,7 @@ public class TurretRotationTesterLocalized extends LinearOpMode {
                     -gamepad1.left_stick_y,
                     -gamepad1.left_stick_x,
                     -gamepad1.right_stick_x,
-                    false // Field Centric
+                    true // robot Centric
             );
 
             Pose currentPose = follower.getPose();

@@ -12,9 +12,9 @@ public class Turret {
     private final Motor encoderRefMotor;
     private final PIDController PID;
 
-    public static double P = 0.1;
-    public static double I = 0.0;
-    public static double D = 0.0;
+    public static double P = 0.95;
+    public static double I = 0.03;
+    public static double D = 0.02;
 
     public static double MAX_POWER = 1.0;
     public static double MIN_POWER = -1.0;
@@ -44,18 +44,20 @@ public class Turret {
      */
     public static double calculateGoalRotation(double cX, double cY, double cR, double tX, double tY) {
         double theta = Math.atan2(tY - cY, tX - cX);
-        return theta - cR;  // or cR - theta, depending on rotation direction idk
+        return cR - theta;
     }
 
     public void setRotation(double theta) {
-        double clampedTheta = Math.max(Math.min(theta, MAX_ANGLE), MIN_ANGLE);
+        double normalizedTheta = ((theta % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
+        if (normalizedTheta > Math.PI) normalizedTheta -= 2 * Math.PI;
+        double clampedTheta = Math.max(Math.min(normalizedTheta, MAX_ANGLE), MIN_ANGLE);
         PID.setSetPoint(clampedTheta);
     }
 
     public void updatePID() {
         PID.setPID(P, I, D);
         double currentPosition = getCurrentRotation();
-        double power = PID.calculate(currentPosition);
+        double power = -PID.calculate(currentPosition);
         power = Math.max(Math.min(power, MAX_POWER), MIN_POWER);
         turretMotor.set(power);
     }

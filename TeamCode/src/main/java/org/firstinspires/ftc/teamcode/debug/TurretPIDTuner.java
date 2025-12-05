@@ -13,6 +13,7 @@ public class TurretPIDTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        TARGET_ROTATION = 0.0;
         Turret turret = new Turret(hardwareMap);
 
         waitForStart();
