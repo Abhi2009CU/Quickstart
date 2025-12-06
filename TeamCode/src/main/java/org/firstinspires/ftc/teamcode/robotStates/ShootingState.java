@@ -19,11 +19,11 @@ public class ShootingState implements State {
         mainTask = new SequentialTask(
                 robotContext,
                 new ParallelTask(robotContext, true,
-                        robotContext.LAUNCHER.new SetHoodPosTask(robotContext, 0.75), //example hood position
-                        robotContext.LAUNCHER.new RunOuttakeTask(robotContext, 1.0)
+                        robotContext.Shooter.new SetHoodPosTask(robotContext, 0.75), //example hood position
+                        robotContext.Shooter.new RunOuttakeTask(robotContext, 1.0)
                 ),
                 robotContext.TRANSFER.new TransferTask(robotContext),
-                robotContext.LAUNCHER.new RunOuttakeTask(robotContext, 0.0)
+                robotContext.Shooter.new RunOuttakeTask(robotContext, 0.0)
         );
     }
 

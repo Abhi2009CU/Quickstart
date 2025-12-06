@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robotStates.IntakingState;
 import org.firstinspires.ftc.teamcode.subSystems.Intake;
-import org.firstinspires.ftc.teamcode.subSystems.Launcher;
+import org.firstinspires.ftc.teamcode.subSystems.Shooter;
 import org.firstinspires.ftc.teamcode.subSystems.Transfer;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
@@ -30,7 +30,7 @@ public class MainTeleOp extends OpMode {
                 ),
 
                 new Intake(hardwareMap),
-                new Launcher(hardwareMap),
+                new Shooter(hardwareMap),
                 new Transfer(hardwareMap),
                 new Turret(hardwareMap)
 
