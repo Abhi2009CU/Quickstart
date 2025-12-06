@@ -24,6 +24,8 @@ public class Turret {
     public static final double TICKS_PER_REV = 384.5;
     public static final double GEAR_RATIO = 215.0/40.0;
 
+    private double angleOffset = 0;
+
     public Turret(HardwareMap hardwareMap) {
         turretMotor = new Motor(hardwareMap, "Turret");
         turretMotor.setRunMode(Motor.RunMode.RawPower);
@@ -51,7 +53,7 @@ public class Turret {
         double normalizedTheta = ((theta % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
         if (normalizedTheta > Math.PI) normalizedTheta -= 2 * Math.PI;
         double clampedTheta = Math.max(Math.min(normalizedTheta, MAX_ANGLE), MIN_ANGLE);
-        PID.setSetPoint(clampedTheta);
+        PID.setSetPoint(clampedTheta + angleOffset);
     }
 
     public void updatePID() {
@@ -60,6 +62,10 @@ public class Turret {
         double power = -PID.calculate(currentPosition);
         power = Math.max(Math.min(power, MAX_POWER), MIN_POWER);
         turretMotor.set(power);
+    }
+
+    public void incrementAngleOffset(double i) {
+        angleOffset += i;
     }
 
     public double getCurrentRotation() {
