@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.subSystems.Turret;
 @Configurable
 @TeleOp(name="Full Test", group="Debug")
 public class FullTest extends LinearOpMode {
-    public static double targetX = 0;
-    public static double targetY = 144;
+    public static double targetX = 135;
+    public static double targetY = 135;
 
     public static Pose startingPose = new Pose(72, 72, 0.5 * Math.PI);
 
@@ -89,12 +89,11 @@ public class FullTest extends LinearOpMode {
 
             follower.update();
 
-
             follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x,
-                    -gamepad1.right_stick_x,
-                    true // robot Centric
+                    Math.pow(-gamepad1.left_stick_y, 3),
+                    Math.pow(-gamepad1.left_stick_x, 3),
+                    Math.pow(-gamepad1.right_stick_x, 3),
+                    false // field Centric
             );
 
 

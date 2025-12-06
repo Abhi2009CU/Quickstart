@@ -59,8 +59,6 @@ public class Shooter {
 
         public SetHoodPosTask(RobotContext robotContext, double currentDistance) {
             super(robotContext);
-/*The points we add are like points on a scatter plot. The table/graph makes a "line of best fit"
- so that for every distance we have a pos for the hood servo, that are calculated by the graph.*/
 
             hoodTable.add(24, 0.8);
             hoodTable.add(27, 0.6);
