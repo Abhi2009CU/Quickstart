@@ -7,18 +7,45 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MyRobot;
 
-public class Launcher {
+public class Shooter {
+    public static double P = 0.1;
+    public static double I = 0.0;
+    public static double D = 0.0;
 
-    private final Servo HOOD_SERVO;
+    private Servo HOOD_SERVO;
     private final Motor LEFT_WHEEL;
     private final Motor RIGHT_WHEEL;
 
-    public Launcher(HardwareMap hardwareMap) {
-        HOOD_SERVO = hardwareMap.get(Servo.class, "hoodServo");
-        LEFT_WHEEL = hardwareMap.get(Motor.class, "leftWheel");
-        RIGHT_WHEEL = hardwareMap.get(Motor.class, "rightWheel");
+    private double targetVelocity = 0.0;
 
-        LEFT_WHEEL.setInverted(true);
+    public Shooter(HardwareMap hardwareMap) {
+        //HOOD_SERVO = hardwareMap.get(Servo.class, "hoodServo");
+        LEFT_WHEEL = new Motor(hardwareMap, "LeftShooter");
+        RIGHT_WHEEL = new Motor(hardwareMap, "RightShooter");
+
+        LEFT_WHEEL.setRunMode(Motor.RunMode.VelocityControl);
+        RIGHT_WHEEL.setRunMode(Motor.RunMode.VelocityControl);
+
+        LEFT_WHEEL.setVeloCoefficients(P, I, D);
+        RIGHT_WHEEL.setVeloCoefficients(P, I, D);
+
+        RIGHT_WHEEL.setInverted(true);
+    }
+
+    public void setVel(double vel) {
+        targetVelocity = vel;
+    }
+
+    public void updatePID() {
+        LEFT_WHEEL.setVeloCoefficients(P, I, D);
+        RIGHT_WHEEL.setVeloCoefficients(P, I, D);
+
+        LEFT_WHEEL.set(targetVelocity);
+        RIGHT_WHEEL.set(targetVelocity);
+    }
+
+    public double getVelocity() {
+        return (LEFT_WHEEL.getCorrectedVelocity() / LEFT_WHEEL.getRate() + RIGHT_WHEEL.getCorrectedVelocity() / RIGHT_WHEEL.getRate()) / 2.0;
     }
 
     public class SetHoodPosTask extends Task {
