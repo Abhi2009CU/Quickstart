@@ -1,11 +1,18 @@
 package org.firstinspires.ftc.teamcode.robotStates;
 
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
+
 import com.jumpypants.murphy.states.State;
+import com.jumpypants.murphy.tasks.ParallelTask;
 import com.jumpypants.murphy.tasks.SequentialTask;
 import com.jumpypants.murphy.tasks.Task;
+import com.jumpypants.murphy.util.RobotContext;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.MyRobot;
+import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 public class IntakingState implements State {
     private final MyRobot robotContext;
@@ -14,24 +21,28 @@ public class IntakingState implements State {
     public IntakingState(MyRobot robotContext) {
         this.robotContext = robotContext;
 
-        mainTask =  new SequentialTask(robotContext,
-                robotContext.INTAKE.new ManualRunIntakeMotor(robotContext)/*,
-                new TransferTask(robotContext)*/
+        mainTask = new SequentialTask(robotContext,
+                robotContext.INTAKE.new ManualRunIntakeMotor(robotContext)
         );
     }
-
 
     @Override
     public State step() {
 
         Gamepad gamepad1 = robotContext.gamepad1;
-        robotContext.DRIVE.driveRobotCentric(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+        follower.setTeleOpDrive(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x,
+                -gamepad1.right_stick_x,
+                false // Field Centric
+        );
 
         if (mainTask.step()) {
             return this;
         }
 
-        return new ShootingState(robotContext, getName());
+        return new ShootingState(robotContext);
     }
 
     @Override

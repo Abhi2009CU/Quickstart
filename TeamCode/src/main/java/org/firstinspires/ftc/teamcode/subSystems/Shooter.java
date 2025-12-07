@@ -21,8 +21,12 @@ public class Shooter {
 
     private double targetVelocity = 0.0;
 
+    public static final double maxVelocity = 1;
+    public static final double stopVelocity = 0;
+
     public Shooter(HardwareMap hardwareMap) {
-        //HOOD_SERVO = hardwareMap.get(Servo.class, "hoodServo");
+//        HOOD_SERVO = hardwareMap.get(Servo.class, "Hood");
+
         LEFT_WHEEL = new Motor(hardwareMap, "LeftShooter");
         RIGHT_WHEEL = new Motor(hardwareMap, "RightShooter");
 
@@ -51,6 +55,23 @@ public class Shooter {
         return (LEFT_WHEEL.getCorrectedVelocity() / LEFT_WHEEL.getRate() + RIGHT_WHEEL.getCorrectedVelocity() / RIGHT_WHEEL.getRate()) / 2.0;
     }
 
+    public class setVelocity extends Task{
+
+        public setVelocity(RobotContext robotContext, double vel){
+            super(robotContext);
+            setVel(vel);
+            updatePID();
+        }
+
+        @Override
+        protected void initialize(RobotContext robotContext) {
+        }
+
+        @Override
+        protected boolean run(RobotContext robotContext) {
+            return false;
+        }
+    }
     public class SetHoodPosTask extends Task {
 
         private final double WAIT_TIME;
