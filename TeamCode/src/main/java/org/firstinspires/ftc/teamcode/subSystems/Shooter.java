@@ -15,6 +15,8 @@ public class Shooter {
     public static double D = 0.0;
 
     private Servo HOOD_SERVO;
+    public final double HOOD_MAX_POS = 0;
+    public final double HOOD_MIN_POS = 0.45;
     private final Motor LEFT_WHEEL;
     private final Motor RIGHT_WHEEL;
 
@@ -52,7 +54,7 @@ public class Shooter {
     }
 
     public void setHoodPosition(double position) {
-        double clampedPosition = Math.max(0.0, Math.min(1.0, position));
+        double clampedPosition = Math.max(HOOD_MIN_POS, Math.min(HOOD_MAX_POS, position));
         HOOD_SERVO.setPosition(clampedPosition);
     }
 
