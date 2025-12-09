@@ -17,6 +17,8 @@ import org.firstinspires.ftc.teamcode.subSystems.Turret;
 @Configurable
 @TeleOp(name="Full Test", group="Debug")
 public class FullTest extends LinearOpMode {
+    public static double HOOD_POSITION = 0.45;
+
     public static double targetX = 135;
     public static double targetY = 135;
 
@@ -57,6 +59,8 @@ public class FullTest extends LinearOpMode {
         follower.startTeleopDrive();
 
         while (opModeIsActive()) {
+            shooter.setHoodPosition(HOOD_POSITION);
+
             shooter.updatePID();
 
             double intakePower = Math.max(-1.0, Math.min(1.0, gamepad1.right_trigger - gamepad1.left_trigger));
@@ -103,6 +107,7 @@ public class FullTest extends LinearOpMode {
             turret.updatePID();
 
             telemetryM.debug("Current Velocity (ticks/s)", shooter.getVelocity());
+            telemetryM.debug("Current Distance", Math.sqrt(Math.pow(currentPose.getX() - targetX, 2) + Math.pow(currentPose.getY() - targetY, 2)));
 
             telemetryM.update();
         }

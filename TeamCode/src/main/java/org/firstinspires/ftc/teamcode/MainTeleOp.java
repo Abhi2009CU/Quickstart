@@ -85,7 +85,7 @@ public class MainTeleOp extends LinearOpMode {
         follower.setStartingPose(startingPose);
         follower.update();
 
-        follower.startTeleopDrive();
+        follower.startTeleopDrive(true);
 
         while (opModeIsActive()){
             stateMachine.step();

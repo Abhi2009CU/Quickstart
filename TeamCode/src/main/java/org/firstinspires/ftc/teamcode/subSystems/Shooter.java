@@ -44,7 +44,7 @@ public class Shooter {
     }
 
     private static double calcHoodPos (double d) {
-        return d * 0.01 + 0.1;
+        return 0.15;
     }
 
     public void setHoodByDistance(double distance) {
