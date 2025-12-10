@@ -31,11 +31,9 @@ public class Shooter {
     private final Motor LEFT_WHEEL;
     private final Motor RIGHT_WHEEL;
 
-    private double targetVelocity = 0.0;
+    public static final double IDLE_VELOCITY = 0.5;
 
-    public static double MAX_VELOCITY = 1;
-    public static double IDLE_VELOCITY = 0.5;
-    public static double STOP_VELOCITY = 0;
+    private double targetVelocity = 0.0;
 
     private double hoodOffset = 0;
 
@@ -55,13 +53,22 @@ public class Shooter {
 
         RIGHT_WHEEL.setInverted(true);
 
+
+        HOOD_POSITION_LUT.add(0, 0.15);
+
         HOOD_POSITION_LUT.add(88, 0.15);
         HOOD_POSITION_LUT.add(120, 0.15);
 
+        HOOD_POSITION_LUT.add(10000, 0.15);
+
         HOOD_POSITION_LUT.createLUT();
+
+        VELOCITY_LUT.add(0, 0.7);
 
         VELOCITY_LUT.add(88, 0.7);
         VELOCITY_LUT.add(120, 0.9);
+
+        VELOCITY_LUT.add(10000, 0.9);
 
         VELOCITY_LUT.createLUT();
     }
@@ -80,6 +87,10 @@ public class Shooter {
 
     public void setHoodByDistance(double distance) {
         setHoodPosition(calcHoodPos(distance));
+    }
+
+    public void setVelByDistance(double distance) {
+        setVel(calcVelocity(distance));
     }
 
     public void setHoodPosition(double position) {

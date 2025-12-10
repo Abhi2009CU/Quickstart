@@ -22,7 +22,6 @@ public class IntakingState implements State {
         this.robotContext = robotContext;
 
         mainTask = new SequentialTask(robotContext,
-                robotContext.SHOOTER.new setVelocity(robotContext, Shooter.IDLE_VELOCITY),
                 new ParallelTask(robotContext, true,
                         robotContext.TRANSFER.new ManualControlTask(robotContext),
                         robotContext.INTAKE.new ManualRunIntakeMotor(robotContext)

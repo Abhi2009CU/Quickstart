@@ -20,7 +20,6 @@ public class ShootingState implements State {
         this.robotContext = robotContext;
 
         mainTask = new SequentialTask(robotContext,
-                robotContext.SHOOTER.new setVelocity(robotContext, Shooter.MAX_VELOCITY),
                 new ParallelTask(robotContext, true,
                         robotContext.TRANSFER.new ManualControlTask(robotContext),
                         robotContext.INTAKE.new ManualRunIntakeMotor(robotContext)
@@ -30,6 +29,7 @@ public class ShootingState implements State {
 
     @Override
     public State step() {
+
         if (mainTask.step()) {
             return this;
         }
