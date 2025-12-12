@@ -36,13 +36,13 @@ public class MainTeleOp extends LinearOpMode {
     public static double BLUE_TARGET_X = 14;
     public static double BLUE_TARGET_Y = 135;
 
-    public static double BLUE_CLOSE_STARTING_X = 72;
-    public static double BLUE_CLOSE_STARTING_Y = 72;
-    public static double BLUE_CLOSE_STARTING_HEADING = 0.5 * Math.PI;
-
-    public static double BLUE_FAR_STARTING_X = 72;
-    public static double BLUE_FAR_STARTING_Y = 72;
+    public static double BLUE_FAR_STARTING_X = 57;
+    public static double BLUE_FAR_STARTING_Y = 8.5;
     public static double BLUE_FAR_STARTING_HEADING = 0.5 * Math.PI;
+
+    public static double BLUE_CLOSE_STARTING_X = 57;
+    public static double BLUE_CLOSE_STARTING_Y = 135;
+    public static double BLUE_CLOSE_STARTING_HEADING = 1.5 * Math.PI;
 
     public static Alliance alliance = Alliance.BLUE;
     public static StartingPositionMode startingPositionMode = StartingPositionMode.CARRY_OVER;
@@ -50,6 +50,7 @@ public class MainTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
         MyRobot robotContext = new MyRobot(
+                hardwareMap,
                 telemetry,
                 gamepad1,
                 gamepad2,
@@ -87,9 +88,9 @@ public class MainTeleOp extends LinearOpMode {
         }
 
 
-        // If the alliance is BLUE, use the positions as
+        // If the alliance is BLUE, use the positions as is
         // If it is RED, mirror the x coordinate about x = 72 (the field centerline)
-        // Also if it is RED, invert the heading
+        // Also if it is RED, reflect the heading about PI/2
         // Carry over means we don't need to set the starting pose here
 
         Pose startingPose;
@@ -98,7 +99,7 @@ public class MainTeleOp extends LinearOpMode {
                 startingPose = new Pose(
                         (alliance == Alliance.BLUE) ? BLUE_CLOSE_STARTING_X : 144 - BLUE_CLOSE_STARTING_X,
                         BLUE_CLOSE_STARTING_Y,
-                        (alliance == Alliance.BLUE) ? BLUE_CLOSE_STARTING_HEADING : -BLUE_CLOSE_STARTING_HEADING
+                        (alliance == Alliance.BLUE) ? BLUE_CLOSE_STARTING_HEADING : Math.PI - BLUE_CLOSE_STARTING_HEADING
                 );
                 follower.setStartingPose(startingPose);
                 break;
@@ -106,7 +107,7 @@ public class MainTeleOp extends LinearOpMode {
                 startingPose = new Pose(
                         (alliance == Alliance.BLUE) ? BLUE_FAR_STARTING_X : 144 - BLUE_FAR_STARTING_X,
                         BLUE_FAR_STARTING_Y,
-                        (alliance == Alliance.BLUE) ? BLUE_FAR_STARTING_HEADING : -BLUE_FAR_STARTING_HEADING
+                        (alliance == Alliance.BLUE) ? BLUE_FAR_STARTING_HEADING : Math.PI - BLUE_FAR_STARTING_HEADING
                 );
                 follower.setStartingPose(startingPose);
                 break;
@@ -132,6 +133,7 @@ public class MainTeleOp extends LinearOpMode {
 
             double d = Math.pow(currentPose.getX() - targetX, 2) + Math.pow(currentPose.getY() - targetY, 2);
             robotContext.SHOOTER.setHoodByDistance(Math.sqrt(d));
+
             robotContext.SHOOTER.setVelByDistance(Math.sqrt(d));
 
             if (gamepad2.right_bumper) {
@@ -151,12 +153,37 @@ public class MainTeleOp extends LinearOpMode {
                 robotContext.SHOOTER.setHoodOffset(0);
             }
 
-            follower.setTeleOpDrive(
-                    Math.pow(-gamepad1.left_stick_y, 3),
-                    Math.pow(-gamepad1.left_stick_x, 3),
-                    Math.pow(-gamepad1.right_stick_x, 3),
-                    false // field Centric
-            );
+            if (gamepad1.triangle) {
+                if (alliance == Alliance.BLUE) {
+                    follower.setPose(new Pose(27, 132, 2.51327));
+                } else {
+                    follower.setPose(new Pose(117, 132, 0.628319));
+                }
+            }
+
+            if(gamepad2.triangle) {
+                robotContext.TURRET.setAngleOffset(0);
+            }
+
+            if (alliance == Alliance.BLUE) {
+                follower.setTeleOpDrive(
+                        Math.pow(gamepad1.left_stick_y, 3),
+                        Math.pow(gamepad1.left_stick_x, 3),
+                        Math.pow(-gamepad1.right_stick_x, 3),
+                        false // field Centric
+                );
+            } else {
+                follower.setTeleOpDrive(
+                        Math.pow(-gamepad1.left_stick_y, 3),
+                        Math.pow(-gamepad1.left_stick_x, 3),
+                        Math.pow(-gamepad1.right_stick_x, 3),
+                        false // field Centric
+                );
+            }
+
+            telemetryM.debug("x pos", currentPose.getX());
+            telemetryM.debug("y pos", currentPose.getY());
+            telemetryM.debug("heading pos", currentPose.getHeading());
         }
     }
 }

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Transfer {
-    public static double FLAP_TIME_COEFFICIENT = 0.2;
+    public static double FLAP_TIME_COEFFICIENT = 0.9;
 
     private final Servo rightFlap;
     private final Servo leftFlap;

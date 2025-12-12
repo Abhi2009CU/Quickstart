@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.jumpypants.murphy.util.RobotContext;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -35,7 +34,7 @@ public class MyRobot extends RobotContext {
      * @param gamepad1  the primary gamepad controller
      * @param gamepad2  the secondary gamepad controller
      */
-    public MyRobot(Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, Intake intake, Shooter shooter, Transfer transfer, Turret turret) {
+    public MyRobot(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, Intake intake, Shooter shooter, Transfer transfer, Turret turret) {
         super(telemetry, gamepad1, gamepad2);
         this.INTAKE = intake;
         this.SHOOTER = shooter;

@@ -9,6 +9,7 @@ import com.jumpypants.murphy.tasks.SequentialTask;
 import com.jumpypants.murphy.tasks.Task;
 import com.jumpypants.murphy.util.RobotContext;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -22,7 +23,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Transfer;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
-@TeleOp(name="TELEOP_WITH_PEDRO", group="Linear OpMode")
+@TeleOp(name="AUTON_WITH_PEDRO", group="Linear OpMode")
 public class MainAutonFar extends LinearOpMode {
     public enum Alliance {
         RED,
@@ -34,21 +35,27 @@ public class MainAutonFar extends LinearOpMode {
     public static double BLUE_TARGET_X = 14;
     public static double BLUE_TARGET_Y = 135;
 
-    public static double BLUE_STARTING_X = 72;
-    public static double BLUE_STARTING_Y = 72;
+    public static double BLUE_STARTING_X = 87;
+    public static double BLUE_STARTING_Y = 8.5;
     public static double BLUE_STARTING_HEADING = 0.5 * Math.PI;
 
-    public static double BLUE_PRELOAD_X = 65;;
-    public static double BLUE_PRELOAD_Y = 20;
+    public static double BLUE_PRELOAD_X = 61;;
+    public static double BLUE_PRELOAD_Y = 22;
     public static double BLUE_PRELOAD_HEADING = 0.5 * Math.PI;
+
+    public static double BLUE_FIRST_ENDPOINT_X = 41;
+    public static double BLUE_FIRST_ENDPOINT_Y = 36;
+    public static double BLUE_FIRST_ENDPOINT_HEADING = Math.PI;
 
     public static Alliance alliance = Alliance.BLUE;
 
     private Path goToPreload;
+    private Path goToFirstEndpoint;
 
     @Override
     public void runOpMode() {
         MyRobot robotContext = new MyRobot(
+                hardwareMap,
                 telemetry,
                 gamepad1,
                 gamepad2,
@@ -107,7 +114,8 @@ public class MainAutonFar extends LinearOpMode {
 
         Task mainTask = new SequentialTask(robotContext,
                 getGoToPreloadTask(robotContext, follower),
-                getShootThreeTask(robotContext)
+                getShootThreeTask(robotContext),
+                getGoToFirstEndpointTask(robotContext, follower)
         );
 
         while (opModeIsActive()){
@@ -129,20 +137,32 @@ public class MainAutonFar extends LinearOpMode {
 
     private void buildPaths(Pose startingPose) {
         double preloadX, preloadY, preloadHeading;
+        double firstEndpointX, firstEndpointY, firstEndpointHeading;
+
         if (alliance == Alliance.BLUE) {
             preloadX = BLUE_PRELOAD_X;
             preloadY = BLUE_PRELOAD_Y;
             preloadHeading = BLUE_PRELOAD_HEADING;
+            firstEndpointX = BLUE_FIRST_ENDPOINT_X;
+            firstEndpointY = BLUE_FIRST_ENDPOINT_Y;
+            firstEndpointHeading = BLUE_FIRST_ENDPOINT_HEADING;
         } else {
             preloadX = 144 - BLUE_PRELOAD_X;
             preloadY = BLUE_PRELOAD_Y;
             preloadHeading = -BLUE_PRELOAD_HEADING;
+            firstEndpointX = 144 - BLUE_FIRST_ENDPOINT_X;
+            firstEndpointY = BLUE_FIRST_ENDPOINT_Y;
+            firstEndpointHeading = -BLUE_FIRST_ENDPOINT_HEADING;
         }
 
         Pose preloadPose = new Pose(preloadX, preloadY, preloadHeading);
+        Pose firstEndpointPose = new Pose(firstEndpointX, firstEndpointY, firstEndpointHeading);
 
         goToPreload = new Path(new BezierLine(startingPose, preloadPose));
         goToPreload.setLinearHeadingInterpolation(startingPose.getHeading(), preloadPose.getHeading());
+
+        goToFirstEndpoint = new Path(new BezierLine(preloadPose, firstEndpointPose));
+        goToFirstEndpoint.setLinearHeadingInterpolation(preloadPose.getHeading(), firstEndpointHeading);
     }
 
     private Task getGoToPreloadTask(MyRobot robotContext, Follower follower) {
@@ -150,6 +170,20 @@ public class MainAutonFar extends LinearOpMode {
             @Override
             protected void initialize(RobotContext robotContext) {
                 follower.followPath(goToPreload);
+            }
+
+            @Override
+            protected boolean run(RobotContext robotContext) {
+                return follower.isBusy();
+            }
+        };
+    }
+
+    private Task getGoToFirstEndpointTask(MyRobot robotContext, Follower follower) {
+        return new Task(robotContext) {
+            @Override
+            protected void initialize(RobotContext robotContext) {
+                follower.followPath(goToFirstEndpoint);
             }
 
             @Override

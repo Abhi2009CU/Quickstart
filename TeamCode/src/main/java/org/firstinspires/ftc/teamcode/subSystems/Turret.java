@@ -68,6 +68,10 @@ public class Turret {
         angleOffset += i;
     }
 
+    public void setAngleOffset (double o) {
+        angleOffset = o;
+    }
+
     public double getCurrentRotation() {
         return -encoderRefMotor.getCurrentPosition() / TICKS_PER_REV / GEAR_RATIO * 2 * Math.PI;
     }
