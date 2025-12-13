@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.subSystems.Transfer;
 import org.firstinspires.ftc.teamcode.subSystems.Turret;
 
 @Configurable
-@TeleOp(name="TELEOP_WITH_PEDRO", group="Linear OpMode")
+@TeleOp(name="MainTeleOp", group="Linear OpMode")
 public class MainTeleOp extends LinearOpMode {
     public enum Alliance {
         RED,
